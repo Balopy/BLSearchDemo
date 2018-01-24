@@ -1,0 +1,173 @@
+//
+//  BLSearhBookTableViewCell.m
+//  OilReading
+//
+//  Created by 王春龙 on 2018/1/11.
+//  Copyright © 2018年 Magic. All rights reserved.
+//
+
+#import "BLSearhBookTableViewCell.h"
+
+@interface BLSearhBookTableViewCell ()
+
+@property (nonatomic, weak) UIImageView *bookImgView;
+
+@property (nonatomic, weak) UILabel *titleLab;
+@property (nonatomic, weak) UILabel *expertLab;
+@property (nonatomic, weak) UIButton *rankLab;
+@property (nonatomic, weak) UILabel *courseNumLab;
+@property (nonatomic, weak) UILabel *alreadyBuyLab;
+@property (nonatomic, weak) UILabel *priceLab;
+@property (nonatomic, weak) UIView *lineView;
+
+@end
+
+
+@implementation BLSearhBookTableViewCell
+NSString *searchBookCellId = @"searchBookCellId";
++ (instancetype)searchBookCellWithTabView:(UITableView *)tableView {
+    BLSearhBookTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:searchBookCellId];
+    if (!cell) {
+        cell = [[BLSearhBookTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:searchBookCellId];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    return cell;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    
+    if (self) {
+        
+        [self setupSubViews];
+        [self configureLayout];
+    }
+    return self;
+}
+
+- (void) setupSubViews {
+    
+    self.bookImgView = [BLGeneralControl createUIImageViewWithName:@"缺省_评论" toView:self.contentView];
+    
+    self.titleLab = [self labelWithFont:MFONT_15 color:MBlack];
+    
+    self.expertLab = [self labelWithFont:MFONT_13 color:MBlack];
+    self.rankLab = [BLGeneralControl createUIButtonBackgroundWithNormalIcon:@"常用按钮" selectedIcon:@"常用按钮" fromVeiew:self.contentView];
+    self.courseNumLab = [self labelWithFont:MFONT_13 color:MDarkColor];
+    self.alreadyBuyLab = [self labelWithFont:MFONT_13 color:MDarkColor];
+    self.priceLab = [self labelWithFont:MFONT_15 color:MRedColor];
+    self.lineView = [BLGeneralControl createUIViewWithBackColor:MlineColor fromVeiew:self.contentView];
+}
+
+
+- (void) configureLayout {
+    CGFloat img_height = 90.0;
+    CGFloat img_width = img_height * BLIconRatio_4_3;
+    
+    MJWeakSelf
+    [self.bookImgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.equalTo(weakSelf.contentView).offset(Spacing15);
+        make.width.equalTo(@(img_width));
+        make.height.equalTo(@(img_height));
+    }];
+    
+    [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(weakSelf.bookImgView);
+        make.left.equalTo(weakSelf.bookImgView.mas_right).offset(Spacing15);
+        make.right.equalTo(weakSelf.contentView).offset(-Spacing10);
+    }];
+    
+    [self.expertLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(weakSelf.titleLab);
+        make.top.equalTo(weakSelf.titleLab.mas_bottom).offset(Spacing10);
+        make.height.equalTo(@(Spacing20));
+    }];
+    
+    [self.rankLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.height.equalTo(weakSelf.expertLab);
+        make.left.equalTo(weakSelf.expertLab.mas_right).offset(Spacing10);
+        make.width.greaterThanOrEqualTo(@(60));
+    }];
+    
+    [self.courseNumLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(weakSelf.expertLab);
+        make.bottom.equalTo(weakSelf.bookImgView);
+    }];
+    
+    [self.alreadyBuyLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(weakSelf.courseNumLab.mas_right).offset(Spacing10);
+        make.centerY.equalTo(weakSelf.courseNumLab);
+    }];
+    
+    [self.priceLab mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(weakSelf.titleLab);
+        make.bottom.equalTo(weakSelf.alreadyBuyLab);
+    }];
+    
+    [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(weakSelf.bookImgView);
+        make.top.equalTo(weakSelf.bookImgView.mas_bottom).offset(Spacing15);
+        make.right.equalTo(weakSelf.titleLab);
+        make.height.equalTo(@1);
+    }];
+}
+
+
+- (void)setModel:(BLSearchBookListModel *)model {
+    _model = model;
+    [self.bookImgView setImageWithPlaceHolder:@"缺省_评论" url:nil];
+    
+    self.expertLab.text = [NSString stringWithFormat:@"专家：%@", model.expertName];
+    
+    NSString *rank = [NSString stringWithFormat:@"  %@  ", model.rankName];
+    [self.rankLab setTitle:rank forState:UIControlStateNormal];
+    
+    NSString *number = [NSString convertNumberToInteger:model.courseNumber title:@"节课"];
+    self.courseNumLab.text = number;
+    
+    
+    NSString *alreadyBuy = [NSString convertNumberToInteger:model.alreadyBuyNum title:@"人已购买"];
+    self.alreadyBuyLab.text = alreadyBuy;
+    
+    self.priceLab.text = [NSString stringWithFormat:@"¥%.2f", model.price];
+    
+    self.titleLab.text = model.title;
+    
+    // 显示搜索结果时
+    if (model.searching) {
+        
+        NSString *originResult = model.title;
+        // 转换成可以操作的字符串类型.
+        NSMutableAttributedString *attribute = [[NSMutableAttributedString alloc] initWithString:originResult];
+        
+        // 获取关键字的位置
+        NSRange range = [originResult rangeOfString:model.searchText];
+        // 添加属性(粗体)
+        [attribute addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:20] range:range];
+        
+        // 关键字高亮
+        [attribute addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:range];
+        [self.titleLab setAttributedText:attribute];
+        
+    } else {
+        [self.titleLab setAttributedText:model.txtAttributed];
+    }
+}
+
+
+- (UILabel *) labelWithFont:(UIFont *)font color:(UIColor *)color {
+    
+    return [BLGeneralControl createUILabelWithTextColor:color Font:font textAlignment:NSTextAlignmentLeft fromView:self.contentView];
+}
+
+
+
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+    
+    // Configure the view for the selected state
+}
+
+@end

@@ -1,0 +1,104 @@
+//
+//  PrefixHeader.pch
+//  BLSearchDemo
+//
+//  Created by Balopy on 2018/1/13.
+//  Copyright © 2018年 Balopy. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+#import <YYKit.h>
+#import <Masonry.h>
+#import "BLGeneralControl.h"
+
+typedef void(^BLUsuallyBlock)(id object, id paramer);
+
+#define MFONT(f) [UIFont systemFontOfSize:f]
+
+#define MFONT_15 MFONT(15.f)
+#define MFONT_10 MFONT(10.f)
+#define MFONT_13 MFONT(13.f)
+#define MFONT_14 MFONT(14.f)
+#define MFONT_20 MFONT(20.f)
+
+/*! 导航栏的高 44 */
+#define BLNavigationBar_h 44
+
+/*! 状态栏的高 20 */
+#define BLStatusBar_h CGRectGetHeight([[UIApplication sharedApplication] statusBarFrame])
+
+/**  * 分割线颜色 */
+#define carlineColor [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1]
+
+/**  * 分割线颜色 */
+#define navColor [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1]
+
+/*! tabBar 的高 49 */
+#define BLTabBar_h 49
+
+#define BLNavigation_Status_h (BLNavigationBar_h + BLStatusBar_h)
+
+/** *屏幕宽*/
+#define kScreen_height [[UIScreen mainScreen] bounds].size.height
+/** *屏幕高*/
+#define kScreen_width [[UIScreen mainScreen] bounds].size.width
+
+//iPhone6 375*667
+/** *屏幕高比例*/
+#define kRatio_height [UIScreen mainScreen].bounds.size.height / 667.0
+
+/** *屏幕宽比例*/
+#define kRatio_width [UIScreen mainScreen].bounds.size.width / 375.0
+
+#define MRationSpacing(spac) spac * kRatio_width
+
+/** 屏幕高减去导航高**/
+#define LessScreenHeight64 kScreen_height - BLNavigation_Status_h
+
+#define BLRatio (kRatio_width < 1 ? 0.8 : 1)
+
+/** tabbar 高度**/
+#define TarbarHeight 49
+/** 分割线高度**/
+#define BottomlineHeight 1
+/** *10个间距*/
+#define Spacing10 10
+/** *8个间距*/
+#define Spacing8 8
+/** *15个间距*/
+#define Spacing15 15
+/** *20个间距*/
+#define Spacing20 20
+/** 头像宽高**/
+#define HeadSpacing20 20
+/** *25个间距*/
+#define Spacing25 25
+/** 注册页面**/
+/** 上边距**/
+#define  Spacing23 23
+/** *13个间距*/
+#define Spacing13 13
+
+// 弱引用
+#define MJWeakSelf __weak typeof(self) weakSelf = self;
+
+#define MMIMAGENAMED(name) [UIImage imageNamed:name]
+
+/** *白色*/
+#define MWhite [UIColor whiteColor]
+/** 黑色**/
+#define MBlack [UIColor blackColor]
+
+
+/*! 深灰色字体 */
+#define MDarkColor [UIColor darkGrayColor]
+
+#define MRedColor [UIColor redColor]
+
+/*! 图片比例 4:3 */
+#define BLIconRatio_4_3 4.0/3.0
+#define BLIconRatio_26_19 260.0/190.0
+
+
+#endif /* PrefixHeader_pch */
